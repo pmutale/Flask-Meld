@@ -35,7 +35,8 @@ setup(
         "beautifulsoup4>=4",
         "orjson>=3.4.6",
         "flask-socketio>=5",
-        "gevent-websocket>=0.10.1"
+        "gevent-websocket>=0.10.1",
+        "jinja2-simple-tags==0.3.1"
     ],
     tests_require=["pytest"],
     test_suite="tests",
