@@ -1,28 +1,16 @@
 from jinja2 import nodes
 from jinja2.ext import Extension
-from flask import url_for
 from .component import get_component_class
 
+from jinja2_simple_tags import StandaloneTag
 
-class MeldTag(Extension):
-    """
-    Create a {% meld %} tag.
-    Used as {% meld 'component_name' %}
-    """
 
+class MeldTag(StandaloneTag):
     tags = {"meld"}
 
-    def parse(self, parser):
-        lineno = parser.stream.expect("name:meld").lineno
-
-        component = parser.parse_expression()
-
-        call = self.call_method("_render", [component], lineno=lineno)
-        return nodes.Output([nodes.MarkSafe(call)]).set_lineno(lineno)
-
-    def _render(self, component):
-        mn = MeldNode(component)
-        return mn.render()
+    def render(self, component_name, **kwargs):
+        mn = MeldNode(component_name)
+        return mn.render(**kwargs)
 
 
 class MeldScriptsTag(Extension):
@@ -63,9 +51,9 @@ class MeldNode:
     def __init__(self, component):
         self.component_name = component
 
-    def render(self):
+    def render(self, **kwargs):
         Component = get_component_class(self.component_name)
-        component = Component()
+        component = Component(**kwargs)
         rendered_component = component.render(self.component_name)
 
         return rendered_component
