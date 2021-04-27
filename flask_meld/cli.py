@@ -32,6 +32,9 @@ def generate_meld_app(name):
         generate_file_with_content(
             base_dir, "app/__init__.py", init_template.template
         )
+        generate_file_with_content(
+            base_dir, "app/wsgi.py", init_template.template
+        )
     except OSError:
         pass
 

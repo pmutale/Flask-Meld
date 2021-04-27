@@ -45,3 +45,8 @@ def test_creates_config_file(generate_app_and_chdir):
 def test_creates_init_file(generate_app_and_chdir):
     expected_path = Path(Path.cwd() / "test_project" / "app" / "__init__.py")
     assert expected_path.exists()
+
+
+def test_creates_wsgi_file(generate_app_and_chdir):
+    expected_path = Path(Path.cwd() / "test_project" / "app" / "wsgi.py")
+    assert expected_path.exists()
