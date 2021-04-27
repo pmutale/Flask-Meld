@@ -63,13 +63,13 @@ def create_app(config_name="development"):
     """
 )
 
-env_example_template = Template(
+env_template = Template(
     """
-SECRET_KEY=$SECRET_KEY
+SECRET_KEY=$secret_key
 """
 )
 
-wsgi_example_template = Template(
+wsgi_template = Template(
     """
 from app import create_app
 
