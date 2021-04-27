@@ -1,7 +1,7 @@
 import os
 import click
 from pathlib import Path
-from flask_meld.templates import requirements_template, config_template
+from flask_meld.templates import requirements_template, config_template, init_template
 
 
 @click.group()
@@ -29,6 +29,9 @@ def generate_meld_app(name):
             base_dir, "requirements.txt", requirements_template.template
         )
         generate_file_with_content(base_dir, "config.py", config_template.template)
+        generate_file_with_content(
+            base_dir, "app/__init__.py", init_template.template
+        )
     except OSError:
         pass
 
