@@ -22,6 +22,16 @@ def test_creates_component_dir(generate_app_and_chdir):
     assert expected_path.is_dir()
 
 
+def test_creates_tests_dir(generate_app_and_chdir):
+    expected_path = Path(Path.cwd() / "test_project" / "tests")
+    assert expected_path.is_dir()
+
+
 def test_creates_config_file(generate_app_and_chdir):
     expected_path = Path(Path.cwd() / "test_project" / "config.py")
     assert expected_path.exists()
+
+
+def test_creates_templates_dir(generate_app_and_chdir):
+    expected_path = Path(Path.cwd() / "test_project" / "app" / "templates" / "meld")
+    assert expected_path.is_dir()
