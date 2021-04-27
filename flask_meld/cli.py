@@ -22,6 +22,8 @@ def generate_meld_app(name):
         base_dir = Path.cwd() / name
         os.makedirs(base_dir / "app" / "meld" / "components")
         os.makedirs(base_dir / "app" / "templates" / "meld")
+        os.makedirs(base_dir / "app" / "static" / "images")
+        os.makedirs(base_dir / "app" / "static" / "css")
         os.makedirs(base_dir / "tests")
         generate_file_with_content(
             base_dir, "requirements.txt", requirements_template.template
