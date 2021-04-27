@@ -1,5 +1,6 @@
 import os
 import click
+import secrets
 from pathlib import Path
 from flask_meld.templates import requirements_template, config_template, init_template
 
@@ -34,6 +35,11 @@ def generate_meld_app(name):
         )
         generate_file_with_content(
             base_dir, "app/wsgi.py", init_template.template
+        )
+
+        generated_secret_key = secrets.token_hex(16)
+        generate_file_with_content(
+            base_dir, ".env", init_template.substitute(generated_secret_key)
         )
     except OSError:
         pass

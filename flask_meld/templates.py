@@ -65,6 +65,7 @@ def create_app(config_name="development"):
 
 env_example_template = Template(
     """
+SECRET_KEY=$SECRET_KEY
 """
 )
 
