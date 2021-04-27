@@ -17,6 +17,11 @@ def test_generate_file_content(tmpdir_factory):
 
 
 def test_creates_component_dir(generate_app_and_chdir):
-    # create directory structure of project/app/meld/components
+    # generate_app_and_chdir fixture creates directory structure of project
     expected_path = Path(Path.cwd() / "test_project" / "app" / "meld" / "components")
     assert expected_path.is_dir()
+
+
+def test_creates_config_file(generate_app_and_chdir):
+    expected_path = Path(Path.cwd() / "test_project" / "config.py")
+    assert expected_path.exists()
