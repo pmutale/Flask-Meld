@@ -1,8 +1,10 @@
+import os
 import pytest
 from flask import Flask
 from flask_meld import Meld
 from pathlib import Path
 from importlib.util import spec_from_file_location, module_from_spec
+from flask_meld.cli import generate_meld_app
 
 
 def init_app(app_dir):
@@ -58,6 +60,13 @@ def app_factory_ctx(app_factory):
 def app_ctx(app):
     with app.app_context() as ctx:
         yield ctx
+
+
+@pytest.fixture(scope="module")
+def generate_app_and_chdir(tmpdir_factory):
+    test_dir = tmpdir_factory.mktemp("test")
+    os.chdir(test_dir)
+    generate_meld_app("test_project")
 
 
 def create_test_component(app_dir):
