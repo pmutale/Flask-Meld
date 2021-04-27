@@ -36,7 +36,8 @@ setup(
         "orjson>=3.4.6",
         "flask-socketio>=5",
         "gevent-websocket>=0.10.1",
-        "jinja2-simple-tags==0.3.1"
+        "jinja2-simple-tags==0.3.1",
+        "click==7.1.2"
     ],
     tests_require=["pytest"],
     test_suite="tests",

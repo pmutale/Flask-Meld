@@ -1,33 +1,27 @@
 import os
-import sys
-import typer
-from pathlib import Path, PurePath
-
-app = typer.Typer()
+import click
+from pathlib import Path
 
 
-@app.command()
-def init(name: str):
+@click.group()
+def meld():
+    """Flask-Meld specific commands"""
+
+
+@meld.command()
+@click.argument("name")
+def new(name):
     """Create a new flask-meld app with application defaults"""
-    typer.echo(f"Generating app {name}")
     generate_meld_app(name)
 
 
-@app.callback()
-def main(ctx: typer.Context):
-    """
-    Manage Meld applications with the commandline
-    """
-    pass
-
-
-def generate_meld_app(name: str):
+def generate_meld_app(name):
     try:
-        path = Path.cwd() / 'app' / 'meld' / 'components'
+        path = Path.cwd() / name / "app" / "meld" / "components"
         os.makedirs(path)
-        print(path)
     except OSError:
         pass
 
+
 if __name__ == "__main__":
-    app()
+    meld()
