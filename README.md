@@ -13,7 +13,24 @@ Less context switching.
 No need to write javascript.
 More fun!
 
-# Initialize Meld in your project
+# Fastest way to get started
+
+Install flask-meld to your Python environment: `pip install flask-meld`
+
+```sh
+# 1. Replace "project_name" with the name of your project
+meld new project_name
+
+# 2. Change to your project_name directory and install requirements
+cd project_name; pip install -r requirements.txt
+
+# 3. Run the flask-meld development server
+flask run
+```
+
+
+
+# Initialize Meld in an existing project (Alternative method to get started)
 
 For the sake of example, here is a minimal Flask application to get things
 running:
