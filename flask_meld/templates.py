@@ -67,6 +67,7 @@ def create_app(config_name="development"):
 env_template = Template(
     """
 SECRET_KEY=$secret_key
+FLASK_ENV=development
 """
 )
 
@@ -80,5 +81,40 @@ socketio = app.socketio
 
 if __name__ == "__main__":
     socketio.run(app=app)
+"""
+)
+
+base_html_template = Template(
+    """
+<html>
+    <head>
+        <title>Welcome to Flask-Meld</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        {% block head_scripts %}
+        {% endblock %}
+    </head>
+    <body>
+        {% meld_scripts %}
+
+        {% block content %}
+
+        {% endblock %}
+
+        {% block page_scripts %}
+        {% endblock %}
+    </body>
+</html>
+"""
+)
+
+index_html_template = Template(
+    """
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Flask-Meld</h1>
+{% endblock %}
 """
 )

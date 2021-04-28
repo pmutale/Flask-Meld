@@ -1,13 +1,17 @@
 import os
-import click
 import secrets
 from pathlib import Path
+
+import click
+
 from flask_meld.templates import (
-    requirements_template,
+    base_html_template,
     config_template,
-    init_template,
-    wsgi_template,
     env_template,
+    index_html_template,
+    init_template,
+    requirements_template,
+    wsgi_template,
 )
 
 
@@ -38,6 +42,12 @@ def generate_meld_app(name):
         generate_file_with_content(base_dir, "config.py", config_template.template)
         generate_file_with_content(base_dir, "app/__init__.py", init_template.template)
         generate_file_with_content(base_dir, "app/wsgi.py", wsgi_template.template)
+        generate_file_with_content(
+            base_dir, "app/templates/base.html", base_html_template.template
+        )
+        generate_file_with_content(
+            base_dir, "app/templates/index.html", index_html_template.template
+        )
 
         generated_secret_key = secrets.token_hex(16)
         generate_file_with_content(
