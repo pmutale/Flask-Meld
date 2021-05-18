@@ -115,7 +115,7 @@ you want the component to load.
 Here is an example for counter:
 
 ```html
-<!-- templates/meld/counter.html -->
+{# templates/meld/counter.html #}
 <div>
     <button meld:click="subtract">-</button>
     <input type="text" meld:model="count" readonly></input>
@@ -127,7 +127,10 @@ Let's take a look at that template file in more detail.
 The buttons use `meld:click` to call the `add` or `subtract` function of the
 Counter component.
 The input uses `meld:model` to bind the input to the `count` property on the
-Counter component.
+Counter component.  
+
+Note, to avoid errors, when adding a comment to a component template use the
+Jinja syntax, `{# comment here #}`, rather than the HTML syntax.
 
 ### Modifiers
 
