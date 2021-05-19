@@ -118,3 +118,25 @@ index_html_template = Template(
 {% endblock %}
 """
 )
+
+components = Template(
+    """
+from flask_meld.component import Component
+
+
+class $class_name(Component):
+    example_variable = False
+    
+    def example_function(self):
+        self.example_variable = not self.example_variable
+"""
+)
+
+components_template = Template(
+    """
+<div>
+    <button meld:click="example_function">Toggle</button>
+    <input type="text" meld:model="example_variable" readonly></input>
+</div>
+"""
+)
