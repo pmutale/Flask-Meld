@@ -19,13 +19,16 @@ Install flask-meld to your Python environment: `pip install flask-meld`
 
 ```sh
 # 1. Replace "project_name" with the name of your project
-meld new project_name
+meld new project name_of_project
 
 # 2. Change to your project_name directory and install requirements
 cd project_name; pip install -r requirements.txt
 
 # 3. Run the flask-meld development server
 flask run
+
+## Bonus (optional) - create a component
+meld new component name_of_component
 ```
 
 

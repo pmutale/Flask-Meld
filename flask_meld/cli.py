@@ -1,6 +1,8 @@
 import os
 import secrets
 from pathlib import Path
+from flask.cli import with_appcontext
+from flask import current_app
 
 import click
 
@@ -22,12 +24,26 @@ def meld():
     """Flask-Meld specific commands"""
 
 
-@meld.command()
+@meld.group()
+def new():
+    """Commands for new keyword"""
+
+
+@new.command("project")
 @click.argument("name")
-def new(name):
+def project(name):
     """Create a new flask-meld app with application defaults"""
     click.echo(f"Creating app {name}")
     generate_meld_app(name)
+
+
+@new.command("component")
+@click.argument("name")
+@with_appcontext
+def component(name):
+    """Create a new component"""
+    click.echo(f"Creating component '{name}'.")
+    generate_meld_component(name)
 
 
 def generate_meld_app(name):
@@ -59,32 +75,42 @@ def generate_meld_app(name):
         pass
 
 
-@meld.command()
-@click.argument("name")
-def component(name):
-    """Create a new component"""
-    click.echo(f"Creating component '{name}'.")
-    generate_meld_component(name)
-
-
 def generate_meld_component(name):
     try:
-        base_dir = Path.cwd()
-        components_dir = (base_dir / "app" / "meld" / "components")
-        templates_dir = (base_dir / "app" / "templates" / "meld")
-        # todo: get root dir from any position
+        base_dir = Path(current_app.root_path)
+        components_dir = base_dir / "meld" / "components"
+        templates_dir = base_dir / "templates" / "meld"
+
         if not (os.path.exists(components_dir) and os.path.exists(templates_dir)):
-            click.echo(f"Failed. Are you in the app directory? Could not find:\n{components_dir}\n{templates_dir}")
-            return
-        class_name = name[:1].upper() + name[1:]  # Capitalize, and leave any other capitalization intact
-        if os.path.exists(components_dir / f"{name}.py") or os.path.exists(templates_dir / f"{name}.html"):
-            click.echo(f"Failed. Component named '{name}' already exists.")
-            return
-        generate_file_with_content(components_dir, f"{name}.py", components.substitute(class_name=class_name))
-        generate_file_with_content(templates_dir, f"{name}.html", components_template.template)
+            click.echo(f"Failed. Could not find: {components_dir} or {templates_dir}")
+            return False
+
+        # Capitalize, and leave any other capitalization intact
+        class_name = name[:1].upper() + name[1:]
+
+        component = components_dir / f"{name}.html"
+        if os.path.exists(component):
+            click.echo(f"Failed. Component '{name}' already exists.")
+            return False
+
+        template = templates_dir / f"{name}.html"
+        if os.path.exists(template):
+            click.echo(f"Failed. Template '{template}' already exists.")
+            return False
+
+        generate_file_with_content(
+            components_dir, f"{name}.py", components.substitute(class_name=class_name)
+        )
+        generate_file_with_content(
+            templates_dir, f"{name}.html", components_template.template
+        )
         click.echo(f"Component '{name}' successfully created.")
+
     except OSError:
-        click.echo(f"Failed. Unable to write to disk. Is the disk full/do we have sufficient permissions?")
+        click.echo(
+            "Failed. Unable to write to disk. Verify you have sufficient permissions."
+        )
+        return False
 
 
 def generate_file_with_content(path, filename, file_contents):
