@@ -11,10 +11,11 @@ python-dotenv>=0.17.0
 config_template = Template(
     """
 import os
+import secrets
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or secrets.token_hex(16)
 
 
 class DevelopmentConfig(Config):
@@ -126,7 +127,7 @@ from flask_meld.component import Component
 
 class $class_name(Component):
     example_variable = False
-    
+
     def example_function(self):
         self.example_variable = not self.example_variable
 """
