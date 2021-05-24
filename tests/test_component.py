@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from jinja2 import Template
 
 from flask_meld.component import Component
+from flask_meld.message import listen
 
 
 class ExampleComponent(Component):
@@ -76,3 +77,21 @@ def test_render_model_defer_value(app):
     # Then
     soup = BeautifulSoup(rendered_html, features="html.parser")
     assert soup.find("input").attrs["value"] == "hello"
+
+class CustomEventComponent(Component):
+    @listen("foo")
+    def foo(self):
+        return "foo"
+
+    @listen("foo", "bar")
+    def bar(self):
+        return "bar"
+
+    def baz(self):
+        return "baz"
+
+def test_listeners():
+    assert CustomEventComponent._listeners() == {
+        "foo": ["foo", "bar"],
+        "bar": ["bar"]
+    }

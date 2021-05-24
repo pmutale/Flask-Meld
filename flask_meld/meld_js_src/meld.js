@@ -51,6 +51,11 @@ export var Meld = (function () {
       morphdom(componentRoot, dom, morphdomOptions);
       components[responseJson.id].refreshEventListeners()
     });
+
+    socketio.on('meld-event', function(payload) {
+      var event = new CustomEvent(payload.event, { detail: payload.message })
+      document.dispatchEvent(event)
+    });
   }
 
 function updateData(component, newData){

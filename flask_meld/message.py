@@ -1,7 +1,8 @@
 import ast
+import functools
 
 from .component import get_component_class
-from flask import jsonify
+from flask import jsonify, current_app
 import orjson
 
 
@@ -32,12 +33,15 @@ def process_message(message):
         elif "callMethod" in action["type"]:
             call_method_name = payload.get("name", "")
             method_name, params = parse_call_method_name(call_method_name)
+            message = payload.get("message")
 
             if method_name is not None and hasattr(component, method_name):
                 func = getattr(component, method_name)
 
                 if params:
                     func(*params)
+                elif message:
+                    func(**message)
                 else:
                     func()
                 if component._form:
@@ -51,6 +55,11 @@ def process_message(message):
         "data": orjson.dumps(jsonify(component._attributes()).json).decode("utf-8"),
     }
     return res
+
+
+def process_init(component_name):
+    Component = get_component_class(component_name)
+    return Component._listeners()
 
 
 def parse_call_method_name(call_method_name: str):
@@ -73,3 +82,32 @@ def parse_call_method_name(call_method_name: str):
                 params = list(map(str.strip, params_str.split(",")))
 
     return method_name, params
+
+
+def listen(*event_names: str):
+    """
+    Decorator to indicate that the decorated method should listen for custom events.
+    It can be called using `flask_meld.emit`. Keyword arguments from `flask_meld.emit`
+    will be passed as keyword arguments to the decorated method.
+
+    Params:
+        *event_names (str): One or more event names to listen for.
+    """
+    def dec(func):
+        func._meld_event_names = event_names
+        return func
+    return dec
+
+
+def emit(event_name: str, **kwargs):
+    """
+    Emit a custom event which will call any Component methods with the `@listen`
+    decorator that are listening for the given event. Keyword arguments to this
+    function are passed as keyword arguments to each of the decorated methods.
+
+    Params:
+        event_name (str): The name of the custom event to emit.
+        **kwargs: Arguments to be passed as keyword arguments to the listening
+            methods.
+    """
+    current_app.socketio.emit("meld-event", {"event": event_name, "message": kwargs})

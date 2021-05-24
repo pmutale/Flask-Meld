@@ -4,7 +4,7 @@ import pkg_resources
 from flask import send_from_directory, _app_ctx_stack, url_for
 from flask_socketio import SocketIO
 from .tag import MeldTag, MeldScriptsTag
-from .message import process_message
+from .message import process_message, process_init
 
 
 class Meld:
@@ -47,3 +47,7 @@ class Meld:
             """meldID, action, componentName"""
             result = process_message(message)
             app.socketio.emit("meld-response", result)
+
+        @app.socketio.on("meld-init")
+        def meld_init(message):
+            return process_init(message)

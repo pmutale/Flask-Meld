@@ -1,4 +1,4 @@
-import {$, walk, hasValue, isEmpty, sendMessage, print, debounce} from "./utils.js";
+import {$, walk, hasValue, isEmpty, sendMessage, print, debounce, socketio} from "./utils.js";
 import { Element } from "./element.js";
 
 export class Component {
@@ -28,110 +28,125 @@ export class Component {
     this.actionEvents = {};
     this.attachedEventTypes = [];
     this.attachedModelEvents = [];
+    this.attachedCustomEvents = [];
 
     this.init();
     this.refreshEventListeners();
   }
 
-checkComponentDefer(element, action){
-    if (element.model.isDefer) {
-        let foundAction = false;
+  checkComponentDefer(element, action){
+      if (element.model.isDefer) {
+          let foundAction = false;
 
-        // Update the existing action with the current value
-        this.actionQueue.forEach((a) => {
-          if (a.payload.name === element.model.name) {
-            a.payload.value = element.getValue();
-            foundAction = true;
+          // Update the existing action with the current value
+          this.actionQueue.forEach((a) => {
+            if (a.payload.name === element.model.name) {
+              a.payload.value = element.getValue();
+              foundAction = true;
+            }
+          });
+
+          // Add the action if not already in the queue
+          if (!foundAction) {
+            this.actionQueue.push(action);
+          }
+          return;
+      }
+    else{
+      this.actionQueue.push(action);
+      this.queueMessage(element.model);
+    }
+  }
+
+  addModelEventListener(component, el, eventType) {
+    el.addEventListener(eventType, (event) => {
+      const element = new Element(event.target);
+
+      const action = {
+        type: "syncInput",
+        payload: {
+          name: element.model.name,
+          value: element.getValue(),
+        },
+      };
+
+      this.checkComponentDefer(element, action);
+    });
+  }
+
+  /**
+   * Adds an action event listener to the document for each type of event (e.g. click, keyup, etc).
+   * Added at the document level because validation errors would sometimes remove the
+   * events when attached directly to the element.
+   * @param {Component} component Component that contains the element.
+   * @param {string} eventType Event type to listen for.
+   */
+  addActionEventListener(component, eventType) {
+    component.document.addEventListener(eventType, (event) => {
+      let targetElement = new Element(event.target);
+
+      // Make sure that the target element is a meld element.
+      if (targetElement && !targetElement.isMeld) {
+        targetElement = targetElement.getMeldParent();
+      }
+
+      if (
+        targetElement &&
+        targetElement.isMeld &&
+        targetElement.actions.length > 0
+      ) {
+        component.actionEvents[eventType].forEach((actionEvent) => {
+          const { action } = actionEvent;
+          const { element } = actionEvent;
+
+          if (targetElement.isSame(element)) {
+            if (action.isPrevent) {
+              event.preventDefault();
+            }
+
+            if (action.isStop) {
+              event.stopPropagation();
+            }
+            var method = { type: "callMethod", payload: { name: action.name } };
+
+
+            if (action.key) {
+              if (action.key === event.key.toLowerCase()) {
+                this.actionQueue.push(method);
+                this.queueMessage(element.model);
+              }
+            } else {
+                this.actionQueue.push(method);
+                this.queueMessage(element.model);
+            }
           }
         });
-
-        // Add the action if not already in the queue
-        if (!foundAction) {
-          this.actionQueue.push(action);
-        }
-        return;
-    }
-  else{
-    this.actionQueue.push(action);
-    this.queueMessage(element.model);
+      }
+    });
   }
-}
 
-addModelEventListener(component, el, eventType) {
-  el.addEventListener(eventType, (event) => {
-    const element = new Element(event.target);
-
-    const action = {
-      type: "syncInput",
-      payload: {
-        name: element.model.name,
-        value: element.getValue(),
-      },
-    };
-
-    this.checkComponentDefer(element, action);
-  });
-}
-
-/**
- * Adds an action event listener to the document for each type of event (e.g. click, keyup, etc).
- * Added at the document level because validation errors would sometimes remove the
- * events when attached directly to the element.
- * @param {Component} component Component that contains the element.
- * @param {string} eventType Event type to listen for.
- */
-addActionEventListener(component, eventType) {
-  component.document.addEventListener(eventType, (event) => {
-    let targetElement = new Element(event.target);
-
-    // Make sure that the target element is a meld element.
-    if (targetElement && !targetElement.isMeld) {
-      targetElement = targetElement.getMeldParent();
-    }
-
-    if (
-      targetElement &&
-      targetElement.isMeld &&
-      targetElement.actions.length > 0
-    ) {
-      component.actionEvents[eventType].forEach((actionEvent) => {
-        const { action } = actionEvent;
-        const { element } = actionEvent;
-
-        if (targetElement.isSame(element)) {
-          if (action.isPrevent) {
-            event.preventDefault();
-          }
-
-          if (action.isStop) {
-            event.stopPropagation();
-          }
-          var method = { type: "callMethod", payload: { name: action.name } };
-
-
-          if (action.key) {
-            if (action.key === event.key.toLowerCase()) {
-              this.actionQueue.push(method);
-              this.queueMessage(element.model);
-            }
-          } else {
-              this.actionQueue.push(method);
-              this.queueMessage(element.model);
-          }
-        }
-      });
-    }
-  });
-}
-
-queueMessage(model, callback) {
-  this.activeDebouncers += 1
-  if (model.debounceTime === -1) {
-    debounce(sendMessage, 150, this, false)(this, callback);
-  } else {
-    debounce(sendMessage, model.debounceTime, this, false)(this, callback);
+  /**
+   * Adds a custom event listener to the document for the given eventName.
+   * @param {string} eventName Name of the custom meld-event to be listened for
+   * @param {string} funcName Name of the method to call on the Python Component
+   */
+  addCustomEventListener(eventName, funcName) {
+    this.document.addEventListener(eventName, (event) => {
+      const element = new Element(event.target);
+      var method = { type: "callMethod", payload: { name: funcName, message: event.detail } };
+      this.actionQueue.push(method);
+      this.queueMessage(element.model);
+    });
   }
-}
+
+  queueMessage(model, callback) {
+    this.activeDebouncers += 1
+    if (model.debounceTime === -1) {
+      debounce(sendMessage, 150, this, false)(this, callback);
+    } else {
+      debounce(sendMessage, model.debounceTime, this, false)(this, callback);
+    }
+  }
 
 
 
@@ -144,6 +159,26 @@ queueMessage(model, callback) {
     if (!this.root) {
       throw Error("No id found");
     }
+
+    /**
+     * Add the custom listeners from the python class
+     * This separate helper function is needed because "this" doesn't
+     * work in the socketio.emit callback (it refers to the socketio
+     * object).
+     */
+    function addListeners(component, response) {
+      Object.entries(response).forEach(([eventName, funcNames]) => {
+        component.attachedCustomEvents.push(eventName)
+        funcNames.forEach((funcName) => {
+          component.addCustomEventListener(eventName, funcName)
+        })
+      })
+    }
+
+    socketio.emit(
+      'meld-init', this.name,
+      (response) => addListeners(this, response)
+    )
   }
 
   refreshEventListeners() {
@@ -214,5 +249,5 @@ queueMessage(model, callback) {
         });
       }
     });
-    }
+  }
 }

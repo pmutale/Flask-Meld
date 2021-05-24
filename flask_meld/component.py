@@ -1,3 +1,5 @@
+from itertools import groupby
+from operator import itemgetter
 import os
 import uuid
 from importlib.util import module_from_spec, spec_from_file_location
@@ -89,6 +91,21 @@ class Component:
 
     def __repr__(self):
         return f"<meld.Component {self.__class__.__name__}>"
+
+    @classmethod
+    def _listeners(cls):
+        """
+        Dictionary containing all listeners and the methods they call
+        """
+        listeners = [
+            (event_name, func.__name__) for func in cls.__dict__.values()
+            if hasattr(func, '_meld_event_names')
+            for event_name in func._meld_event_names
+        ]
+        return {
+            event_name: [t[1] for t in group]
+            for event_name, group in groupby(listeners, itemgetter(0))
+        }
 
     @property
     def _meld_attrs(self):
