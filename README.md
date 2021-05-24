@@ -135,6 +135,47 @@ Counter component.
 Note, to avoid errors, when adding a comment to a component template use the
 Jinja syntax, `{# comment here #}`, rather than the HTML syntax.
 
+### Pass data to a component
+
+You can, of course, pass data to your meld component. Meld is passing **kwargs 
+to the render function of the *meld* templatetag, so you can pass any number of 
+named arguments. The component is found based on the first parameter, aka name 
+of the component, and any number of data passed afterwards. 
+
+Providing a very basic component as an example to display a greeting message using
+the passed value for the keyword "name" in the corresponding template.
+
+```html
+{# templates/meld/greeter.html #}
+<div>
+    Hello, {{name or "Nobody"}}
+</div>
+```
+which can be invoked using:
+
+```html
+{# templates/base.html #}
+{% meld 'greeter', name="John Doe" %}
+```
+
+### Use passed values in a component (advanced use)
+
+If you want to use the passed arguments from the meld template tag in your component (e.g. configuring the component or adding initial data), you can simply use them from the constructor: 
+
+```py
+class Greeter(Component):
+
+    def __init__(self, **kwargs):
+        super().__init__()
+        name = kwargs.get('name', 'Nobody')
+```
+
+```html
+<div>
+    Hello, {{name}}
+</div>
+```
+
 ### Modifiers
 
 Use modifiers to change how Meld handles network requests.
