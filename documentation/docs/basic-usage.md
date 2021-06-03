@@ -3,7 +3,7 @@
 ## Project setup
 
 ### Create a new project
-First, let's create our new project, let's call it `poetry-demo`:
+First, let's create our new project, let's call it `meld-example`:
 
 ```bash
 meld new project meld-example
