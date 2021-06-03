@@ -5,3 +5,4 @@ venv
 *.egg-info
 .eggs
 .idea
+/documentation/site/*
