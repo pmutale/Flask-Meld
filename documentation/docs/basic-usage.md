@@ -33,9 +33,9 @@ Meld can be added to an existing application by completing the following steps:
     `meld = Meld()` and `meld.init_app(app)` in your `__init__.py` file.
     - If using a single `app.py` instead of using the `init_app` you can simply
       initialize Meld by using `Meld(app)
-- Use the socketio server to serve your application with `socketio.run(app)` or to 
-specify a port and debugging use `socketio.run(app=app, port=5000, debug=True)`
-
+    - Add `{% meld_scripts %}` in the `body` of your base HTML template
+    - Use the socketio server to serve your application with `socketio.run(app)` or to 
+    specify a port and debugging use `socketio.run(app=app, port=5000, debug=True)`
 
 ## Components
 
