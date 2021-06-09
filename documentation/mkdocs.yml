@@ -4,7 +4,9 @@ theme: readthedocs
 
 nav:
   - Introduction: index.md
-  - Basic Usage: basic-usage.md
+  - Getting Started: getting-started.md
+  - Components: components.md
+  - Templates: templates.md
   - Commands: cli.md
   - Features: features.md
 
