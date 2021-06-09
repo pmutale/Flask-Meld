@@ -66,7 +66,7 @@ properties and functions in this way allows you to customize the behavior of you
 
 
 ```html
-<!-- templates/meld/counter.html -->
+{# templates/meld/counter.html #}
 <div>
     <button meld:click="subtract">-</button>
     <input type="text" meld:model="count" readonly></input>
