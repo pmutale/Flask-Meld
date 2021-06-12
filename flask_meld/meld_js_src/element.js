@@ -1,3 +1,4 @@
+import { print, hasValue} from "./utils.js";
 import { Attribute } from "./attribute.js";
 
 /**
@@ -122,9 +123,9 @@ export class Element {
         if (attribute.modifiers.attr) {
           this.loading.attr = attribute.value;
         } else if (attribute.modifiers.class && attribute.modifiers.remove) {
-          this.loading.removeClass = attribute.value;
+          this.loading.removeClasses = attribute.value.split(" ");
         } else if (attribute.modifiers.class) {
-          this.loading.class = attribute.value;
+          this.loading.classes = attribute.value.split(" ");
         } else if (attribute.modifiers.remove) {
           this.loading.hide = true;
         } else {
@@ -156,6 +157,69 @@ export class Element {
 
       if (attribute.isKey) {
         this.key = attribute.value;
+      }
+    }
+  }
+  /**
+   * Hide the element.
+   */
+  hide() {
+    this.el.hidden = "hidden";
+  }
+
+  /**
+   * Show the element.
+   */
+  show() {
+    this.el.hidden = null;
+  }
+
+  /**
+   * Handle loading for the element.
+   */
+  handleLoading() {
+    this.handleInterfacer("loading");
+  }
+
+  /**
+   * Handle interfacers for the element.
+   * @param {string} interfacerType The type of interfacer. Either "dirty" or "loading".
+   * @param {bool} revert Whether or not the revert the interfacer.
+   */
+  handleInterfacer(interfacerType, revert) {
+    revert = revert || false;
+
+    if (hasValue(this[interfacerType])) {
+      if (this[interfacerType].attr) {
+        if (revert) {
+          this.el.removeAttribute(this[interfacerType].attr);
+        } else {
+          this.el.setAttribute(
+            this[interfacerType].attr,
+            this[interfacerType].attr
+          );
+        }
+      }
+
+      if (this[interfacerType].classes) {
+        if (revert) {
+          this.el.classList.remove(...this[interfacerType].classes);
+
+          // Remove the class attribute if it's empty so that morphdom sees the node as equal
+          if (this.el.classList.length === 0) {
+            this.el.removeAttribute("class");
+          }
+        } else {
+          this.el.classList.add(...this[interfacerType].classes);
+        }
+      }
+
+      if (this[interfacerType].removeClasses) {
+        if (revert) {
+          this.el.classList.add(...this[interfacerType].removeClasses);
+        } else {
+          this.el.classList.remove(...this[interfacerType].removeClasses);
+        }
       }
     }
   }

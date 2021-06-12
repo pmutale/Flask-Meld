@@ -17,6 +17,49 @@ export function sendMessage(component) {
   component.actionQueue = [];
 
   socketio.emit('meld-message', {'id': component.id, 'actionQueue': component.currentActionQueue, 'componentName': component.name, 'data': component.data});
+/*
+  component.loadingEls.forEach(function(element){
+    handleLoading(component, element)
+  })
+  */
+}
+
+/**
+ * Handles loading elements in the component.
+ * @param {Component} component Component.
+ * @param {Element} targetElement Targetted element.
+ */
+export function handleLoading(component, targetElement) {
+  targetElement.handleLoading();
+
+  // Look at all elements with a loading attribute
+  component.loadingEls.forEach((loadingElement) => {
+    if (loadingElement.target) {
+      let targetedEl = $(`#${loadingElement.target}`, component.root);
+
+      if (!targetedEl) {
+        component.keyEls.forEach((keyElement) => {
+          if (!targetedEl && keyElement.key === loadingElement.target) {
+            targetedEl = keyElement.el;
+          }
+        });
+      }
+
+      if (targetedEl) {
+        if (targetElement.el.isSameNode(targetedEl)) {
+          if (loadingElement.loading.hide) {
+            loadingElement.hide();
+          } else if (loadingElement.loading.show) {
+            loadingElement.show();
+          }
+        }
+      }
+    } else if (loadingElement.loading.hide) {
+      loadingElement.hide();
+    } else if (loadingElement.loading.show) {
+      loadingElement.show();
+    }
+  });
 }
 
 /*

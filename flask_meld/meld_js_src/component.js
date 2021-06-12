@@ -1,4 +1,4 @@
-import {$, walk, hasValue, isEmpty, sendMessage, print, debounce, socketio} from "./utils.js";
+import {$, walk, hasValue, isEmpty, sendMessage, print, debounce, socketio, handleLoading} from "./utils.js";
 import { Element } from "./element.js";
 
 export class Component {
@@ -21,6 +21,7 @@ export class Component {
     this.root = undefined;
     this.modelEls = [];
     this.keyEls = [];
+    this.loadingEls = [];
 
     this.actionQueue = [];
     this.activeDebouncers = 0
@@ -107,6 +108,21 @@ export class Component {
             if (action.isStop) {
               event.stopPropagation();
             }
+
+            if (targetElement.loading) {
+              if (targetElement.loading.attr) {
+                targetElement.el[targetElement.loading.attr] = targetElement.loading.attr;
+              }
+
+              if (targetElement.loading.class) {
+                targetElement.el.classList.add(targetElement.loading.class);
+              }
+
+              if (targetElement.loading.removeClass) {
+                targetElement.el.classList.remove(targetElement.loading.removeClass);
+              }
+            }
+
             var method = { type: "callMethod", payload: { name: action.name } };
 
 
@@ -119,6 +135,7 @@ export class Component {
                 this.actionQueue.push(method);
                 this.queueMessage(element.model);
             }
+            handleLoading(component, targetElement);
           }
         });
       }

@@ -1,4 +1,4 @@
-import { contains } from "./utils.js";
+import { contains, print } from "./utils.js";
 
 /**
  * Encapsulate DOM element attribute for meld-related information.
