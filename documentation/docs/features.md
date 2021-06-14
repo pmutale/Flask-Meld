@@ -1,4 +1,96 @@
 # Features
+## Loading States
+Sometimes a component might take a little bit of time to finish an action, for example,
+making a request to an external API. In these cases it can be helpful to give some
+feedback to the user that the request is still processing. Enter loading states.
+
+### Show/Hide Elements During Loading States
+
+```html
+<div>
+    <button meld:click="sponsor">Support open-source software</button>
+
+    <div meld:loading>
+        Processing Github request...
+    </div>
+</div>
+```
+
+When the "sponsor" button is clicked, the "Processing Github request..." will be
+displayed. Once the action has completed the message will disappear.
+
+You can also "hide" an element during a loading state using the `.remove` modifier.
+
+```html
+<div>
+    <button meld:click="sponsor">Support open-source software</button>
+
+    <div meld:loading.remove>
+        Hide this div while loading
+    </div>
+</div>
+```
+
+### Targeting specific actions
+If your component has multiple actions you may want to show loading states
+only for specific actions.
+
+```html
+<div>
+  <button meld:click="add" id="addAction">Add</button>
+  <button meld:click="remove" id="removeAction">Remove</button>
+
+  <div meld:loading meld:target="addAction">Adding item</div>
+  <div meld:loading meld:target="removeAction">Removing item</div>
+</div>
+```
+
+An element’s `meld:key` can also be targeted.
+
+```html
+<div>
+  <button meld:click="add" meld:key="addKey">Add</button>
+  <button meld:click="remove" meld:key="removeKey">remove</button>
+
+  <div meld:loading meld:target="addKey">Adding item</div>
+  <div meld:loading meld:target="removeKey">Removing item</div>
+</div>
+```
+
+### Set set class of element during loading state
+
+Add or remove classes from an element during loading states by adding the `.class` modifier
+
+```html
+<div>
+  <button meld:click="update" meld:loading.class="opacity-50">Update</button>
+</div>
+```
+
+Classes can also be removed durning a loading state. Below if the update button is
+pressed the `bg-purple` class will be removed from the input during the loading state and 
+is added back when the loading state completes.
+
+```html
+<div>
+  <button class="bg-purple" meld:loading.class.remove="bg-purple" meld:click="update">Update</button>
+</div>
+```
+
+### Set attribute of element during loading state
+
+An element can set an attribute during a loading state. A great use case for setting an
+attribute is to add the "disabled" attribute to elements when an action is triggered.
+
+```html
+<div>
+  <button meld:click="update" meld:loading.attr="disabled">Update</button>
+</div>
+```
+
+
+
+
 ## Form Validation
 
 A big part of creating web applications is using forms. Flask-Meld integrates with
