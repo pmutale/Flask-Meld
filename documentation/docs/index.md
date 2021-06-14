@@ -21,7 +21,7 @@ Install Flask-Meld in your virtual environment.
 pip install flask-meld
 ```
 
-Meld uses the [Application Factory](https://flask.palletsprojects.com/en/master/tutorial/factory/) 
+Meld uses the [Application Factory](https://flask.palletsprojects.com/en/2.0.x/tutorial/factory/) 
 approach to structuring an application and gives the user a CLI tool to get
 their project setup quickly by automating much of the boilerplate code for
 you.
