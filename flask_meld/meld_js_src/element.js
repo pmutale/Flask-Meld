@@ -41,9 +41,9 @@ export class Element {
     return value;
   }
   /**
-   * Get the element's next parent that is a unicorn element.
+   * Get the element's next parent that is a meld element.
    *
-   * Returns `null` if no unicorn element can be found before the root.
+   * Returns `null` if no meld element can be found before the root.
    */
   getMeldParent() {
     let parentElement = this.parent;

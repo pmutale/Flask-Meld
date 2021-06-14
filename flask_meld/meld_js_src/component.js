@@ -109,20 +109,6 @@ export class Component {
               event.stopPropagation();
             }
 
-            if (targetElement.loading) {
-              if (targetElement.loading.attr) {
-                targetElement.el[targetElement.loading.attr] = targetElement.loading.attr;
-              }
-
-              if (targetElement.loading.class) {
-                targetElement.el.classList.add(targetElement.loading.class);
-              }
-
-              if (targetElement.loading.removeClass) {
-                targetElement.el.classList.remove(targetElement.loading.removeClass);
-              }
-            }
-
             var method = { type: "callMethod", payload: { name: action.name } };
 
 
@@ -130,12 +116,13 @@ export class Component {
               if (action.key === event.key.toLowerCase()) {
                 this.actionQueue.push(method);
                 this.queueMessage(element.model);
+                handleLoading(component, targetElement);
               }
             } else {
                 this.actionQueue.push(method);
                 this.queueMessage(element.model);
+                handleLoading(component, targetElement);
             }
-            handleLoading(component, targetElement);
           }
         });
       }
