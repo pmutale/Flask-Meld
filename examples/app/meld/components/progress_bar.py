@@ -1,9 +1,8 @@
-
 from flask_meld import Component, listen
 
 
 class ProgressBar(Component):
-    progress = 50
+    progress = 0
 
     @listen("progress")
     def set_progress(self, progress):
