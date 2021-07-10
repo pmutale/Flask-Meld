@@ -78,6 +78,7 @@ class Component:
     The meld Component class does most of the heavy lifting to handle data-binding,
     template context variable binding, template rendering and additional hooks.
     """
+
     def __init__(self, id=None, **kwargs):
         if not id:
             id = uuid.uuid4()
@@ -98,8 +99,9 @@ class Component:
         Dictionary containing all listeners and the methods they call
         """
         listeners = [
-            (event_name, func.__name__) for func in cls.__dict__.values()
-            if hasattr(func, '_meld_event_names')
+            (event_name, func.__name__)
+            for func in cls.__dict__.values()
+            if hasattr(func, "_meld_event_names")
             for event_name in func._meld_event_names
         ]
         return {
@@ -272,6 +274,13 @@ class Component:
 
             for model_attr in model_attrs:
                 element.attrs["value"] = context_variables[element.attrs[model_attr]]
+                if (
+                    element.attrs.get("type") and
+                    element.attrs["type"] == "checkbox"
+                    and context_variables[element.attrs[model_attr]]
+                ):
+                    element.attrs["checked"] = True
+
 
     @staticmethod
     def _get_root_element(soup):
