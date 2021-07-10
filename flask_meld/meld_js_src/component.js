@@ -199,23 +199,7 @@ export class Component {
       const element = new Element(el);
 
       if (element.isMeld) {
-        if (
-          hasValue(element.field) &&
-          (hasValue(element.db) || hasValue(element.model))
-        ) {
-          if (!this.attachedDbEvents.some((e) => e.isSame(element))) {
-            this.attachedDbEvents.push(element);
-            addDbEventListener(this, element.el, element.field.eventType);
-          }
-
-          if (!this.dbEls.some((e) => e.isSame(element))) {
-            this.dbEls.push(element);
-          }
-        } else if (
-          hasValue(element.model) &&
-          isEmpty(element.db) &&
-          isEmpty(element.field)
-        ) {
+         if ( hasValue(element.model)) {
           if (!this.attachedModelEvents.some((e) => e.isSame(element))) {
             this.attachedModelEvents.push(element);
             this.addModelEventListener(this, element.el, element.model.eventType);
