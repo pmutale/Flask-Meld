@@ -281,7 +281,6 @@ class Component:
                 ):
                     element.attrs["checked"] = True
 
-
     @staticmethod
     def _get_root_element(soup):
         for element in soup.contents:

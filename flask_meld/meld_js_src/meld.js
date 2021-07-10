@@ -20,7 +20,6 @@ export var Meld = (function () {
       if (!responseJson) {
         return
       }
-
       if (responseJson.error) {
         console.error(responseJson.error);
         return
@@ -29,6 +28,11 @@ export var Meld = (function () {
         return
       else if(components[responseJson.id].actionQueue.length > 0)
         return
+
+      if (responseJson.redirect) {
+        window.location.href = responseJson.redirect.url;
+      }
+
 
 
       updateData(components[responseJson.id], responseJson.data);
@@ -128,30 +132,6 @@ function walk(el, callback) {
     // TODO: Handle sub-components
     callback(walker.currentNode);
   }
-}
-/*
-    Get a value from an element. Tries to deal with HTML weirdnesses.
-    */
-function getValue(el) {
-  if (!el.type) {
-    return
-  }
-  let value = el.value;
-
-  // Handle checkbox
-  if (el.type.toLowerCase() == "checkbox") {
-    value = el.checked;
-  }
-
-  // Handle multiple select options
-  if (el.type.toLowerCase() == "select-multiple") {
-    value = [];
-    for (var i = 0; i < el.selectedOptions.length; i++) {
-      value.push(el.selectedOptions[i].value);
-    }
-  }
-
-  return value;
 }
 
 /*

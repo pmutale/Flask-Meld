@@ -17,8 +17,7 @@ class LoginForm(Component):
     def save(self):
         self.valid = self.validate()
         self.submitted = True
-        print(redirect(url_for("index")))
-        #return redirect(url_for("index"))
+        return redirect(url_for("index"))
 
     def toggle_show_password(self):
         self.show_password = not self.show_password

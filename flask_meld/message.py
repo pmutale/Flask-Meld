@@ -1,4 +1,5 @@
 import ast
+from werkzeug.wrappers.response import Response
 import functools
 
 from .component import get_component_class
@@ -14,6 +15,7 @@ def process_message(message):
     data = message["data"]
     Component = get_component_class(component_name)
     component = Component(meld_id, **data)
+    return_data = None
 
     for action in action_queue:
         payload = action.get("payload", None)
@@ -37,13 +39,12 @@ def process_message(message):
 
             if method_name is not None and hasattr(component, method_name):
                 func = getattr(component, method_name)
-
                 if params:
-                    func(*params)
+                    return_data = func(*params)
                 elif message:
-                    func(**message)
+                    return_data = func(**message)
                 else:
-                    func()
+                    return_data = func()
                 if component._form:
                     component._bind_form(component._attributes())
 
@@ -54,6 +55,9 @@ def process_message(message):
         "dom": rendered_component,
         "data": orjson.dumps(jsonify(component._attributes()).json).decode("utf-8"),
     }
+
+    if type(return_data) is Response and return_data.status_code == 302:
+        res["redirect"] = {"url": return_data.location}
     return res
 
 
