@@ -6,6 +6,7 @@ from importlib.util import module_from_spec, spec_from_file_location
 
 import orjson
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 from bs4.formatter import HTMLFormatter
 from flask import render_template, current_app, jsonify
 
@@ -273,13 +274,20 @@ class Component:
                 )
 
             for model_attr in model_attrs:
-                element.attrs["value"] = context_variables[element.attrs[model_attr]]
+                value = context_variables[element.attrs[model_attr]]
+                element.attrs["value"] = value
+                if element.name == "select":
+                    for e in element.find_all('option'):
+                        if type(e) is Tag and e.attrs.get("value") == value:
+                            e['selected'] = ''
+
                 if (
                     element.attrs.get("type") and
                     element.attrs["type"] == "checkbox"
                     and context_variables[element.attrs[model_attr]]
                 ):
                     element.attrs["checked"] = True
+
 
     @staticmethod
     def _get_root_element(soup):
