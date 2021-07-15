@@ -277,17 +277,15 @@ class Component:
                 value = context_variables[element.attrs[model_attr]]
                 element.attrs["value"] = value
                 if element.name == "select":
-                    for e in element.find_all('option'):
+                    for e in element.find_all("option"):
                         if type(e) is Tag and e.attrs.get("value") == value:
-                            e['selected'] = ''
+                            e["selected"] = ""
 
-                if (
-                    element.attrs.get("type") and
-                    element.attrs["type"] == "checkbox"
-                    and context_variables[element.attrs[model_attr]]
+                elif (
+                    element.attrs.get("type")
+                    and element.attrs.get("type") == "checkbox" and value is True
                 ):
-                    element.attrs["checked"] = True
-
+                    element["checked"] = ""
 
     @staticmethod
     def _get_root_element(soup):
