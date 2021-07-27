@@ -27,7 +27,7 @@ def app(tmpdir_factory):
     return app
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def app_factory(tmpdir_factory):
     # create directory structure of project/app/meld/components
     project_dir = tmpdir_factory.mktemp("app_factory_project", numbered=False)
@@ -42,6 +42,7 @@ def app_factory(tmpdir_factory):
     spec.loader.exec_module(test)
 
     app = test.create_app("test_config")
+    app.root_path = app_dir
     return app
 
 
@@ -71,6 +72,7 @@ def generate_app_and_chdir(tmpdir_factory):
 
 def create_test_component(app_dir):
     Path(f"{app_dir}/meld/components").mkdir(parents=True, exist_ok=True)
+    Path(f"{app_dir}/meld/templates").mkdir(parents=True, exist_ok=True)
     component = Path(f"{app_dir}/meld/components/search.py")
     write_component_class_contents(component)
     return app_dir

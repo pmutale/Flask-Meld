@@ -50,7 +50,8 @@ def generate_meld_app(name):
     try:
         base_dir = Path.cwd() / name
         os.makedirs(base_dir / "app" / "meld" / "components")
-        os.makedirs(base_dir / "app" / "templates" / "meld")
+        os.makedirs(base_dir / "app" / "meld" / "templates")
+        os.makedirs(base_dir / "app" / "templates")
         os.makedirs(base_dir / "app" / "static" / "images")
         os.makedirs(base_dir / "app" / "static" / "css")
         os.makedirs(base_dir / "tests")
@@ -76,17 +77,21 @@ def generate_meld_app(name):
 
 
 def generate_meld_component(name):
+    name = name.lower()
     try:
         base_dir = Path(current_app.root_path)
         components_dir = base_dir / "meld" / "components"
-        templates_dir = base_dir / "templates" / "meld"
+        templates_dir = base_dir / "meld" / "templates"
 
         if not (os.path.exists(components_dir) and os.path.exists(templates_dir)):
             click.echo(f"Failed. Could not find: {components_dir} or {templates_dir}")
             return False
 
-        # Capitalize, and leave any other capitalization intact
-        class_name = name[:1].upper() + name[1:]
+        name_split = name.split("_")
+
+        class_name = ""
+        for name_seq in name_split:
+            class_name += name_seq.capitalize()
 
         component = components_dir / f"{name}.html"
         if os.path.exists(component):
