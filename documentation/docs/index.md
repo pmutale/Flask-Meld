@@ -1,6 +1,7 @@
 # Introduction
-Meld is a full-stack, reactive, web framework for Flask. Meld gives you tools to
-dynamic frontend experiences without the need to write any Javascript.
+Flask-Meld is a library to provide server rendered templates over websockets for Flask 
+applications.  Meld gives you tools to dynamic frontend experiences without the need 
+to write any Javascript.
 
 Instead of syncing data between the client and the server via HTTP requests,
 Meld uses a persistent WebSocket connection. When data is updated on the

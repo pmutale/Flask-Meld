@@ -1,13 +1,9 @@
 ## Templates
 
-Create a component template in `templates/meld/counter.html`. By creating a file
-within the `templates/meld` directory just include `{% meld 'counter' %}` where
-you want the component to load.
-
 Here is an example for counter:
 
 ```html
-{# templates/meld/counter.html #}
+{# app/meld/templates/counter.html #}
 <div>
     <button meld:click="subtract">-</button>
     <input type="text" meld:model="count" readonly></input>
@@ -35,7 +31,7 @@ Providing a very basic component as an example to display a greeting message usi
 the passed value for the keyword "name" in the corresponding template.
 
 ```html
-{# templates/meld/greeter.html #}
+{# app/meld/templates/greeter.html #}
 <div>
     Hello, {{name or "Nobody"}}
 </div>
@@ -43,7 +39,7 @@ the passed value for the keyword "name" in the corresponding template.
 which can be invoked using:
 
 ```html
-{# templates/base.html #}
+{# app/templates/base.html #}
 {% meld 'greeter', name="John Doe" %}
 ```
 

@@ -118,7 +118,7 @@ class RegistrationForm(FlaskForm):
 Use WTForm helpers to create your form in your HTML template. 
 
 ```html
-<!-- templates/meld/register.html -->
+<!-- app/meld/templates/register.html -->
 <div>
     <form method="POST">
         <div>
@@ -153,7 +153,7 @@ Make sure that `meld:model="name_of_field"` exists on each field.
 ### Define the form in the component
 
 ```py
-# meld/components/register.py
+# app/meld/components/register.py
 from flask_meld import Component
 from forms import RegistrationForm
 

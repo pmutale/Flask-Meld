@@ -44,7 +44,6 @@ meld-example
 │   └── meld
 │       └── components
 │           └── meld_component.py
-│   └── templates
-│       └── meld
+│       └── templates
 │           └── meld_component.html
 ```

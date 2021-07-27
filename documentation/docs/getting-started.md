@@ -16,6 +16,8 @@ meld-example
 ├── app
 │   └── __init__.py
 │   └── meld
+│   │   └── components
+│   │   └── templates
 │   └── static
 │   └── templates
 │   └── wsgi.py
