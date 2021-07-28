@@ -82,7 +82,7 @@ def parse_call_method_name(call_method_name: str):
         if params_str != "":
             try:
                 params = ast.literal_eval("[" + params_str + "]")
-            except ValueError:
+            except (ValueError, SyntaxError):
                 params = list(map(str.strip, params_str.split(",")))
 
     return method_name, params

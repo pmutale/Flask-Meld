@@ -7,6 +7,7 @@ from flask_meld.message import parse_call_method_name, listen
     ["message_name", "expected_params"],
     [
         ("call(hello)", ["hello"]),
+        ("call(!)", ["!"]),
         ("call('hello')", ["hello"]),
         ("call('hello, world')", ["hello, world"]),
         ("call(hello, world)", ["hello", "world"]),
