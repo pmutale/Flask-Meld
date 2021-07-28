@@ -1,10 +1,13 @@
 import os
 from pathlib import Path
+
+import jinja2
 import pkg_resources
-from flask import send_from_directory, _app_ctx_stack, url_for
+from flask import send_from_directory
 from flask_socketio import SocketIO
-from .tag import MeldTag, MeldScriptsTag
-from .message import process_message, process_init
+
+from .message import process_init, process_message
+from .tag import MeldScriptsTag, MeldTag
 
 
 class Meld:
@@ -22,6 +25,14 @@ class Meld:
     def init_app(self, app, socketio=None, **kwargs):
         app.jinja_env.add_extension(MeldTag)
         app.jinja_env.add_extension(MeldScriptsTag)
+
+        # Load templates from template dir or app/meld/templates
+        custom_template_loader = jinja2.ChoiceLoader([
+            app.jinja_loader,
+            jinja2.FileSystemLoader('app/meld/templates'),
+        ])
+
+        app.jinja_loader = custom_template_loader
         if socketio:
             app.socketio = socketio
         else:

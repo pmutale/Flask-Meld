@@ -1,14 +1,15 @@
-from itertools import groupby
-from operator import itemgetter
 import os
 import uuid
 from importlib.util import module_from_spec, spec_from_file_location
+from itertools import groupby
+from operator import itemgetter
 
 import orjson
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from bs4.formatter import HTMLFormatter
-from flask import render_template, current_app, jsonify
+from flask import current_app, jsonify, render_template
+from jinja2.exceptions import TemplateNotFound
 
 
 def convert_to_snake_case(s):
@@ -229,7 +230,10 @@ class Component:
         return self._view(component_name)
 
     def _render_template(self, template_name: str, context_variables: dict):
-        return render_template(template_name, **context_variables)
+        try:
+            return render_template(template_name, **context_variables)
+        except TemplateNotFound:
+            return render_template(f"meld/{template_name}", **context_variables)
 
     def _view(self, component_name: str):
         data = self._attributes()
@@ -240,7 +244,7 @@ class Component:
         context_variables.update({"form": self._form})
 
         rendered_template = self._render_template(
-            f"meld/{component_name}.html", context_variables
+            f"{component_name}.html", context_variables
         )
 
         soup = BeautifulSoup(rendered_template, features="html.parser")
@@ -283,7 +287,8 @@ class Component:
 
                 elif (
                     element.attrs.get("type")
-                    and element.attrs.get("type") == "checkbox" and value is True
+                    and element.attrs.get("type") == "checkbox"
+                    and value is True
                 ):
                     element["checked"] = ""
 
