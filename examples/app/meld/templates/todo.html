@@ -7,7 +7,7 @@
         {% if todos %}
         <ul class="divide-y divide-gray-200">
             {% for todo in todos %}
-            <li class="p-4 flex justify-between">
+            <li class="p-4 flex justify-between transition duration-500 ease-in-out">
                 <div class="flex items-center">
                     <input type="checkbox" meld:click="complete_todo({{loop.index -1}})" class="block mr-2 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
                 {% if edit_todo_index == loop.index - 1%}
@@ -20,7 +20,7 @@
                 </div>
                 <div class="items-baseline">
                 <button meld:click="remove_todo({{loop.index - 1}})" 
-                    class="text-red-700 pl-4">X</button>
+                    class="text-red-700 pl-4 text-3xl">&times;</button>
                 </div>
             </li>
             {% endfor %}
@@ -28,11 +28,13 @@
         {% endif %}
         {% if completed_todos %}
         <div class="pt-4">
-            <h3>Completed Todos</h3>
             <ul class="divide-y divide-gray-200">
                 {% for todo in completed_todos %}
                 <li class="p-4 flex justify-between">
-                    {{todo}} 
+                    <span class="opacity-50">{{todo}}</span>
+                <button meld:click="undo({{loop.index - 1}})" 
+                    class="text-red-700 pl-4">Undo</button>
+                </div>
                 </li>
                 {% endfor %}
             <ul>

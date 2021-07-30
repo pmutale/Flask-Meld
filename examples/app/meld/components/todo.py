@@ -27,3 +27,7 @@ class Todo(Component):
     def edit_todo(self):
         self.todos[self.edit_todo_index] = self.updated_todo
         self.edit_todo_index = None
+
+    def undo(self, index):
+        todo = self.completed_todos.pop(index)
+        self.todos.append(todo)
