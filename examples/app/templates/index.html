@@ -2,8 +2,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="w-1/2 mx-auto">
+<div class="">
 <h1 class="text-xl my-4">Flask-Meld Emit Demo</h1>
+<div class="pt-8 pb-24">
+    {% meld "todo" %}
+</div>
     {% meld "progress_bar" %}
     {% meld "long_running_process" %}
 
