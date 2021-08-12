@@ -65,6 +65,8 @@ class Greeter(Component):
 
 Use modifiers to change how Meld handles network requests.
 
+* `lazy`: `<input meld:model.lazy="search">` To prevent updates from happening on every input, you can append a lazy modifier to the end of meld:model. That will only update the component when a blur event happens.
+
 * `debounce`: `<input meld:model.debounce-500="search">` Delay network requests for an amount of time after a keypress. Used to increase performance and sync when the user has paused typing for an amount of time. `debounce-250` will wait 250ms before it syncs with the server. The default is 150ms.
 
 * `defer`: `<input meld:model.defer="search">` Pass the search field with the next network request. Used to improve performance when realtime databinding is not necessary.
