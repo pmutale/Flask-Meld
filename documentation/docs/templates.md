@@ -43,16 +43,24 @@ which can be invoked using:
 {% meld 'greeter', name="John Doe" %}
 ```
 
-### Use passed values in a component (advanced use)
+### Use passed values in a component
 
-If you want to use the passed arguments from the meld template tag in your component (e.g. configuring the component or adding initial data), you can simply use them from the constructor: 
+You may want to have the ability to access a passed in value within a component.
+
+Using the same example as above, pass in a `name` to the component.
+
+```html
+{# app/templates/base.html #}
+{% meld 'greeter', name="John Doe" %}
+```
+
+Access the `name` attribute within the component with `self.name`.
 
 ```py
 class Greeter(Component):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        name = kwargs.get('name', 'Nobody')
+    def get_name(self):
+        return self.name
 ```
 
 ```html
