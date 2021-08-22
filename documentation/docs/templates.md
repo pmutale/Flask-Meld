@@ -50,8 +50,8 @@ If you want to use the passed arguments from the meld template tag in your compo
 ```py
 class Greeter(Component):
 
-    def __init__(self, **kwargs):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         name = kwargs.get('name', 'Nobody')
 ```
 
