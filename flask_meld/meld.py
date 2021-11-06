@@ -29,7 +29,7 @@ class Meld:
         # Load templates from template dir or app/meld/templates
         custom_template_loader = jinja2.ChoiceLoader([
             app.jinja_loader,
-            jinja2.FileSystemLoader('app/meld/templates'),
+            jinja2.FileSystemLoader(os.path.join(app.root_path, 'meld/templates')),
         ])
 
         app.jinja_loader = custom_template_loader

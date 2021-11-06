@@ -43,13 +43,11 @@ def get_component_module(module_name):
 
     if not user_specified_dir:
         try:
-            name = getattr(current_app, "name", None)
-            full_path = os.path.join(name, "meld", "components", module_name + ".py")
+            full_path = os.path.join(current_app.root_path, "meld", "components", module_name + ".py")
             module = load_module_from_path(full_path, module_name)
         except FileNotFoundError:
             full_path = os.path.join("meld", "components", module_name + ".py")
             module = load_module_from_path(full_path, module_name)
-        return module
     else:
         try:
             full_path = os.path.join(user_specified_dir, module_name + ".py")
@@ -59,7 +57,7 @@ def get_component_module(module_name):
                 user_specified_dir, "components", module_name + ".py"
             )
             module = load_module_from_path(full_path, module_name)
-        return module
+    return module
 
 
 def load_module_from_path(full_path, module_name):
