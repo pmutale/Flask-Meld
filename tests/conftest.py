@@ -20,7 +20,7 @@ def app(tmpdir_factory):
     # create directory structure of project/meld/components
     app_dir = tmpdir_factory.mktemp("project")
     meld = Meld()
-    app = Flask(f"{app_dir}")
+    app = Flask(f"{app_dir}", root_path=app_dir)
     create_test_component(app_dir)
     app.secret_key = __name__
     meld.init_app(app)
