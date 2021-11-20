@@ -124,8 +124,11 @@ class Component:
         self._form = getattr(self, "form")
         for field in self._form:
             if not field.type == "SubmitField":
-                meld_attribute = {"meld:model": field.name}
-                setattr(self._form[field.name], "render_kw", meld_attribute)
+                # add render_kw defined in form field and add databinding
+                render_kw = field.render_kw or dict()
+                if not any(key.startswith("meld:model") for key in render_kw):
+                    render_kw["meld:model"] = field.name
+                setattr(self._form[field.name], "render_kw", render_kw)
                 self._bind_data_to_form(field, kwargs)
 
     def _set_token(self, field):
