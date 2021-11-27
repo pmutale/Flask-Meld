@@ -12,3 +12,27 @@ that mean? It means you can enjoy writing dynamic user interfaces in pure Python
 Less context switching.
 No need to write javascript.
 More fun!
+
+# Flask-Meld Developer information
+
+## Tests
+
+### Installing test requirements
+
+'''sh
+pip install -r tests/requirements.txt
+'''
+
+
+### Run with browser tests
+
+'''sh
+pytest --headed
+'''
+
+### Run without browser tests
+
+'''sh
+pytest --ignore=tests/integration
+'''
+
