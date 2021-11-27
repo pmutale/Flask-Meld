@@ -1,4 +1,5 @@
 import os
+import shutil
 import pytest
 from flask import Flask
 from flask_meld import Meld
@@ -47,6 +48,28 @@ def app_factory(tmpdir_factory):
 
 
 @pytest.fixture
+def browser_client():
+    current_test = os.getenv('PYTEST_CURRENT_TEST')
+    base = current_test.split("/")[0]
+    meld_base = Path(f"{base}/meld_test_project/meld")
+    index = Path(f"{base}/meld_test_project/templates/index.html")
+    templates = Path(f"{meld_base}/templates/")
+    components = Path(f"{meld_base}/components/")
+
+    component_name_path = current_test.split("::")[0].split(".")[0]
+    component_base_path = "/".join(component_name_path.split("/")[:-1])
+    component_name = component_name_path.split("/")[-1].replace("test_", "")
+
+    template = Path(f"{component_base_path}/{component_name}.html")
+    component = Path(f"{component_base_path}/{component_name}.py")
+
+    shutil.copyfile(template, f"{templates}/{component_name}.html")
+    shutil.copyfile(component, f"{components}/{component_name}.py")
+    insert_component_to_index(index, component_name)
+    yield
+
+
+@pytest.fixture
 def client(app_factory):
     return app_factory.test_client()
 
@@ -64,9 +87,7 @@ def app_ctx(app):
 
 
 @pytest.fixture(scope="module")
-def generate_app_and_chdir(tmpdir_factory):
-    test_dir = tmpdir_factory.mktemp("test")
-    os.chdir(test_dir)
+def generate_app(tmpdir_factory):
     generate_meld_app("test_project")
 
 
@@ -76,6 +97,17 @@ def create_test_component(app_dir):
     component = Path(f"{app_dir}/meld/components/search.py")
     write_component_class_contents(component)
     return app_dir
+
+
+def insert_component_to_index(index, component_name):
+    with index.open("w") as f:
+        class_def = [
+            '{% extends "base.html" %}',
+            '{% block content %}',
+            f"{{% meld '{component_name}' %}}"
+            '{% endblock %}',
+        ]
+        f.writelines(f"{line}\n" for line in class_def)
 
 
 def write_component_class_contents(component_file):
