@@ -21,48 +21,49 @@ def test_generate_file_content(tmpdir_factory):
 
 def test_creates_component_dir(generate_app):
     # generate_app fixture creates directory structure of project
-    expected_path = Path(Path.cwd() / "test_project" / "app" / "meld" / "components")
+    expected_path = Path(generate_app / "test_project" / "app" / "meld" / "components")
     assert expected_path.is_dir()
 
 
 def test_creates_tests_dir(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / "tests")
+    expected_path = Path(generate_app / "test_project" / "tests")
     assert expected_path.is_dir()
 
 
 def test_creates_tests_static(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / "app" / "static" / "images")
+    expected_path = Path(generate_app / "test_project" / "app" / "static" / "images")
     assert expected_path.is_dir()
 
 
 def test_creates_templates_dir(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / "app" / "meld" / "templates")
+    expected_path = Path(generate_app / "test_project" / "app" / "meld" / "templates")
+
     assert expected_path.is_dir()
 
 
 def test_creates_config_file(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / "config.py")
+    expected_path = Path(generate_app / "test_project" / "config.py")
     assert expected_path.exists()
 
 
 def test_creates_init_file(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / "app" / "__init__.py")
+    expected_path = Path(generate_app / "test_project" / "app" / "__init__.py")
     assert expected_path.exists()
 
 
 def test_creates_wsgi_file(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / "app" / "wsgi.py")
+    expected_path = Path(generate_app / "test_project" / "app" / "wsgi.py")
     assert expected_path.exists()
 
 
 def test_creates_env_file(generate_app):
-    expected_path = Path(Path.cwd() / "test_project" / ".env")
+    expected_path = Path(generate_app / "test_project" / ".env")
     assert expected_path.exists()
 
 
 def test_creates_base_html_file(generate_app):
     expected_path = Path(
-        Path.cwd() / "test_project" / "app" / "templates" / "base.html"
+        generate_app / "test_project" / "app" / "templates" / "base.html"
     )
     assert expected_path.exists()
 

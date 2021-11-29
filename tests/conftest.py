@@ -103,8 +103,10 @@ def app_ctx(app):
 
 
 @pytest.fixture(scope="module")
-def generate_app(tmpdir_factory):
-    generate_meld_app("test_project")
+def generate_app(tmp_path_factory):
+    name = "test_project"
+    generate_meld_app(name, tmp_path_factory.getbasetemp() / name)
+    return tmp_path_factory.getbasetemp()
 
 
 def create_test_component(app_dir):
