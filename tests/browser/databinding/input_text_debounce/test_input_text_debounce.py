@@ -3,7 +3,7 @@ def test_input_defer(browser_client, page):
     # Click input
     page.click("input")
     # Fill input
-    page.fill("input", "flask-meld1")
+    page.fill("input", "flask-debounce test")
     assert page.inner_text('#bound-data') == ''
     page.wait_for_timeout(200)
-    assert page.inner_text('#bound-data') == 'flask-meld1'
+    assert page.inner_text('#bound-data') == 'flask-debounce test'

@@ -4,9 +4,7 @@ def test_input_text(browser_client, page):
     # Click input
     page.click("input")
     # Fill input
-    page.fill("input", "flask-meld1")
-    finished = False
-    while not finished:
-        if page.inner_text('#bound-data') == 'flask-meld1':
-            finished = True
-            assert page.inner_text('#bound-data') == 'flask-meld1'
+    fill_text = "flask-meld input_text"
+    page.fill("input", fill_text)
+    page.wait_for_timeout(200)
+    assert page.inner_text("#bound-data") == fill_text
