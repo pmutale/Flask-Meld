@@ -31,7 +31,10 @@ playwright install
 # run the application on port 5009 without reload
 cd tests/meld_test_project; flask run --port=5009 --no-reload
 
-# in another terminal
+# run tests in another terminal
+pytest
+
+# to watch the browser tests
 pytest --headed
 '''
 
