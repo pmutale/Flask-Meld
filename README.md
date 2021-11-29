@@ -21,18 +21,23 @@ More fun!
 
 '''sh
 pip install -r tests/requirements.txt
+playwright install
 '''
 
 
 ### Run with browser tests
 
 '''sh
+# run the application on port 5009 without reload
+cd tests/meld_test_project; flask run --port=5009 --no-reload
+
+# in another terminal
 pytest --headed
 '''
 
 ### Run without browser tests
 
 '''sh
-pytest --ignore=tests/integration
+pytest --ignore=tests/browser
 '''
 
