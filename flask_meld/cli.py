@@ -46,9 +46,10 @@ def component(name):
     generate_meld_component(name)
 
 
-def generate_meld_app(name):
+def generate_meld_app(name, base_dir=None):
     try:
-        base_dir = Path.cwd() / name
+        if not base_dir:
+            base_dir = Path.cwd() / name
         os.makedirs(base_dir / "app" / "meld" / "components")
         os.makedirs(base_dir / "app" / "meld" / "templates")
         os.makedirs(base_dir / "app" / "templates")
