@@ -19,15 +19,15 @@ More fun!
 
 ### Installing test requirements
 
-'''sh
+```sh
 pip install -r tests/requirements.txt
 playwright install
-'''
+```
 
 
 ### Run with browser tests
 
-'''sh
+```sh
 # run the application on port 5009 without reload
 cd tests/meld_test_project; flask run --port=5009 --no-reload
 
@@ -36,11 +36,11 @@ pytest
 
 # to watch the browser tests
 pytest --headed
-'''
+```
 
 ### Run without browser tests
 
-'''sh
+```sh
 pytest --ignore=tests/browser
-'''
+```
 
