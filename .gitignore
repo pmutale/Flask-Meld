@@ -6,3 +6,6 @@ venv
 .eggs
 .idea
 /documentation/site/*
+tests/meld_test_project/meld/components
+tests/meld_test_project/meld/templates
+tests/meld_test_project/templates/index.html
