@@ -48,28 +48,19 @@ def app_factory(tmpdir_factory):
     return app
 
 
-@pytest.fixture(scope="function")
-def browser_client():
-    cwd = os.getcwd()
+@pytest.fixture(scope="session")
+def browser_client(pytestconfig):
     current_test = os.getenv('PYTEST_CURRENT_TEST')
-    base = current_test.split("/")[0]
+    base = pytestconfig.rootdir / "tests"
     meld_base = Path(f"{base}/meld_test_project/meld")
     index = Path(f"{base}/meld_test_project/templates/index.html")
-
-    in_tests_dir = cwd.split("/")[-1] == 'tests'
-    if in_tests_dir:
-        meld_base = strip_tests_text(meld_base)
-        index = strip_tests_text(index)
 
     templates = Path(f"{meld_base}/templates/")
     components = Path(f"{meld_base}/components/")
 
     component_name_path = Path(current_test.split("::")[0].split(".")[0])
 
-    if in_tests_dir:
-        component_name_path = strip_tests_text(component_name_path)
-
-    component_base_path = "/".join(component_name_path.parts[:-1])
+    component_base_path = Path(base, "/".join(component_name_path.parts[1:-1]))
     component_name = component_name_path.parts[-1].replace("test_", "")
 
     template = Path(f"{component_base_path}/{component_name}.html")
@@ -79,11 +70,6 @@ def browser_client():
     shutil.copyfile(component, f"{components}/{component_name}.py")
     insert_component_to_index(index, component_name)
 
-
-def strip_tests_text(text: Path):
-    text = str(text).replace("tests/", "")
-    text = str(text).replace("tests", "")
-    return Path(text)
 
 @pytest.fixture
 def client(app_factory):
