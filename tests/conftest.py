@@ -48,7 +48,7 @@ def app_factory(tmpdir_factory):
     return app
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def browser_client(pytestconfig):
     current_test = os.getenv('PYTEST_CURRENT_TEST')
     base = pytestconfig.rootdir / "tests"
@@ -68,6 +68,7 @@ def browser_client(pytestconfig):
 
     shutil.copyfile(template, f"{templates}/{component_name}.html")
     shutil.copyfile(component, f"{components}/{component_name}.py")
+    print(f"copying {templates}/{component_name}")
     insert_component_to_index(index, component_name)
 
 

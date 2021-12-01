@@ -1,4 +1,4 @@
-def test_input_defer(browser_client, page):
+def test_input_debounce(browser_client, page):
     page.goto("http://127.0.0.1:5009/")
     # Click input
     page.click("input")
