@@ -5,7 +5,7 @@ def test_input_defer(browser_client, page):
     page.click("input")
     # Fill input
     page.fill("input", "flask-defer test")
-    page.click("#button")
     assert page.inner_text('#bound-data-defer') == ''
-    page.wait_for_timeout(200)
+    page.click("#button")
+    page.wait_for_timeout(100)
     assert page.inner_text('#bound-data-defer') == 'flask-defer test'
