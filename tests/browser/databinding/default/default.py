@@ -1,6 +1,6 @@
 from flask_meld.component import Component
-from flask import redirect, url_for
 
 
-class InputText(Component):
+class Default(Component):
     first_name = ""
+    description = ""
