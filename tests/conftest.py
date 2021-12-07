@@ -68,7 +68,6 @@ def browser_client(pytestconfig):
 
     shutil.copyfile(template, f"{templates}/{component_name}.html")
     shutil.copyfile(component, f"{components}/{component_name}.py")
-    print(f"copying {templates}/{component_name}")
     insert_component_to_index(index, component_name)
 
 

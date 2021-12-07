@@ -2,6 +2,7 @@ import { Component } from "./component.js";
 import { Element } from "./element.js";
 import { Attribute } from "./attribute.js";
 import { contains, hasValue, isEmpty, sendMessage, socketio, print } from "./utils.js";
+import { morph } from "./morph.js"
 
 export var Meld = (function () {
   var meld = {};  // contains all methods exposed publicly in the meld object
@@ -52,7 +53,7 @@ export var Meld = (function () {
         },
       }
       var componentRoot = $('[meld\\:id="' + responseJson.id + '"]');
-      morphdom(componentRoot, dom, morphdomOptions);
+      morph(componentRoot, dom);
       components[responseJson.id].refreshEventListeners()
     });
 
