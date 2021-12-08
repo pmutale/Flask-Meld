@@ -24,3 +24,18 @@ def test_text_area(browser_client, page):
 
     # make sure the text in the input does not disappear
     assert page.input_value("#text-area") == fill_text
+
+
+def test_checkbox(browser_client, page):
+    page.goto("http://127.0.0.1:5009/")
+    foo_id = "#foo-id"
+    foo = page.locator("#foo-id")
+
+    assert page.inner_text("#bound-foo") == 'True'
+    assert foo.is_checked()
+
+    page.uncheck(foo_id)
+    page.wait_for_timeout(200)
+
+    assert foo.is_checked() is False
+    assert page.inner_text("#bound-foo") == 'False'
