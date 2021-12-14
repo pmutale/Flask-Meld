@@ -5,8 +5,9 @@ import { Attribute } from "./attribute.js";
  * Encapsulate DOM element for Meld-related information.
  */
 export class Element {
-  constructor(el) {
+  constructor(el, component) {
     this.el = el;
+    this.component = component
     this.init();
   }
 
@@ -24,11 +25,23 @@ export class Element {
    */
   getValue() {
     let { value } = this.el;
+    let component = this.component
 
     if (this.el.type) {
       if (this.el.type.toLowerCase() === "checkbox") {
+        let modelValue = component.data[this.model.name]
         // Handle checkbox
-        value = this.el.checked;
+        if (Array.isArray(modelValue)) {
+          modelValue = this.mergeCheckboxValueIntoArray(this.el, modelValue)
+          return modelValue;
+        }
+        if (this.el.value != "on"){
+          if (!this.el.checked){
+            return ""
+          }
+          return this.el.value
+        }
+        return this.el.checked;
       } else if (this.el.type.toLowerCase() === "select-multiple") {
         // Handle multiple select options
         value = [];
@@ -40,6 +53,13 @@ export class Element {
 
     return value;
   }
+    mergeCheckboxValueIntoArray(el, arrayValue) {
+        if (el.checked) {
+          return arrayValue.concat(el.value)
+        }
+
+        return arrayValue.filter(item => item !== el.value)
+    }
   /**
    * Get the element's next parent that is a meld element.
    *

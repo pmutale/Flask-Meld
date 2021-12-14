@@ -6,5 +6,5 @@ class Default(Component):
     description = ""
     foo = True
 
-    bar = "a"
-    baz = "b"
+    bar = []
+    baz = ""

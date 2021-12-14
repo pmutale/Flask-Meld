@@ -43,7 +43,9 @@ def get_component_module(module_name):
 
     if not user_specified_dir:
         try:
-            full_path = os.path.join(current_app.root_path, "meld", "components", module_name + ".py")
+            full_path = os.path.join(
+                current_app.root_path, "meld", "components", module_name + ".py"
+            )
             module = load_module_from_path(full_path, module_name)
         except FileNotFoundError:
             full_path = os.path.join("meld", "components", module_name + ".py")
@@ -280,8 +282,8 @@ class Component:
 
             for model_attr in model_attrs:
                 value = context_variables[element.attrs[model_attr]]
-                element.attrs["value"] = value
                 if element.name == "select":
+                    element.attrs["value"] = value
                     for e in element.find_all("option"):
                         if type(e) is Tag and e.attrs.get("value") == value:
                             e["selected"] = ""
@@ -289,9 +291,21 @@ class Component:
                 elif (
                     element.attrs.get("type")
                     and element.attrs.get("type") == "checkbox"
-                    and value is True
                 ):
-                    element["checked"] = ""
+                    if value is True:
+                        if not element.attrs.get("value"):
+                            element["checked"] = ""
+                    else:
+                        if element.attrs.get("value"):
+                            value = context_variables[element.attrs[model_attr]]
+                            if (
+                                len(value)
+                                and value[0]
+                                not in context_variables[element.attrs[model_attr]]
+                            ):
+                                context_variables[element.attrs[model_attr]].append(
+                                    value[0]
+                                )
 
     @staticmethod
     def _get_root_element(soup):
