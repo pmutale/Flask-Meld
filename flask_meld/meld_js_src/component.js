@@ -61,7 +61,7 @@ export class Component {
 
   addModelEventListener(component, el, eventType) {
     el.addEventListener(eventType, (event) => {
-      const element = new Element(event.target);
+      const element = new Element(event.target, component);
 
       const action = {
         type: "syncInput",
@@ -84,7 +84,7 @@ export class Component {
    */
   addActionEventListener(component, eventType) {
     component.document.addEventListener(eventType, (event) => {
-      let targetElement = new Element(event.target);
+      let targetElement = new Element(event.target, component);
 
       // Make sure that the target element is a meld element.
       if (targetElement && !targetElement.isMeld) {
@@ -136,7 +136,7 @@ export class Component {
    */
   addCustomEventListener(eventName, funcName) {
     this.document.addEventListener(eventName, (event) => {
-      const element = new Element(event.target);
+      const element = new Element(event.target, this);
       var method = { type: "callMethod", payload: { name: funcName, message: event.detail } };
       this.actionQueue.push(method);
       this.queueMessage(element.model);
@@ -196,7 +196,7 @@ export class Component {
         return;
       }
 
-      const element = new Element(el);
+      const element = new Element(el, this);
 
       if (element.isMeld) {
          if ( hasValue(element.model)) {
@@ -239,3 +239,4 @@ export class Component {
     });
   }
 }
+

@@ -39,3 +39,15 @@ def test_checkbox(browser_client, page):
 
     assert foo.is_checked() is False
     assert page.inner_text("#bound-foo") == 'False'
+
+    # test_multiple_checkboxes
+    page.check("#bar-a")
+    page.wait_for_timeout(200)
+    page.check("#bar-b")
+    page.wait_for_timeout(200)
+    assert page.inner_text("#bound-bar") == "['q', 'v']"
+
+    # test checkbox with int value
+    page.check("#baz-id")
+    page.wait_for_timeout(200)
+    assert page.inner_text("#bound-baz") == "2"
