@@ -43,6 +43,7 @@ def test_render_model_value(app):
     <div class="row">
         <input type="text" meld:model="text">
         <button class="btn right" meld:click="add">+</button>
+        <span id="text-id">{{ text }}</span>
     </div>
     """
     component = DirectTemplateComponent(template)
@@ -55,7 +56,7 @@ def test_render_model_value(app):
 
     # Then
     soup = BeautifulSoup(rendered_html, features="html.parser")
-    assert soup.find("input").attrs["value"] == "hello"
+    assert soup.find("span").text == "hello"
 
 
 def test_render_model_defer_value(app):
@@ -64,6 +65,7 @@ def test_render_model_defer_value(app):
     <div class="row">
         <input type="text" meld:model.defer="text">
         <button class="btn right" meld:click="add">+</button>
+        <span id="text-id">{{ text }}</span>
     </div>
     """
     component = DirectTemplateComponent(template)
@@ -76,7 +78,8 @@ def test_render_model_defer_value(app):
 
     # Then
     soup = BeautifulSoup(rendered_html, features="html.parser")
-    assert soup.find("input").attrs["value"] == "hello"
+    assert soup.find("span").text == "hello"
+
 
 class CustomEventComponent(Component):
     @listen("foo")
