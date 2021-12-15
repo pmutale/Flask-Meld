@@ -51,3 +51,15 @@ def test_checkbox(browser_client, page):
     page.check("#baz-id")
     page.wait_for_timeout(200)
     assert page.inner_text("#bound-baz") == "2"
+
+
+def test_radio_field(browser_client, page):
+    page.goto("http://127.0.0.1:5009/")
+    page.click("#html")
+    page.wait_for_timeout(200)
+
+    assert page.inner_text("#bound-radio") == 'HTML'
+
+    page.click("#python")
+    page.wait_for_timeout(200)
+    assert page.inner_text("#bound-radio") == 'Python'

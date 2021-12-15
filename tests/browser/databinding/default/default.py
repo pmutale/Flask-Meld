@@ -8,3 +8,5 @@ class Default(Component):
 
     bar = []
     baz = ""
+
+    radio = ""
