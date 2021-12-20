@@ -1,11 +1,14 @@
 import os
 import shutil
-import pytest
-from time import sleep
-from flask import Flask
-from flask_meld import Meld
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
-from importlib.util import spec_from_file_location, module_from_spec
+from time import sleep
+
+import pytest
+from flask import Flask
+from meld_test_project import create_app
+
+from flask_meld import Meld
 from flask_meld.cli import generate_meld_app
 
 
@@ -17,16 +20,27 @@ def init_app(app_dir):
     return app
 
 
-@pytest.fixture(scope="module")
-def app(tmpdir_factory):
-    # create directory structure of project/meld/components
-    app_dir = tmpdir_factory.mktemp("project")
-    meld = Meld()
-    app = Flask(f"{app_dir}", root_path=app_dir)
-    create_test_component(app_dir)
-    app.secret_key = __name__
-    meld.init_app(app)
+"""
+Can we pass in a test directory to the application?
+"""
+
+
+@pytest.fixture(scope="session")
+def app():
+    app = create_app()
     return app
+
+
+# @pytest.fixture(scope="module")
+# def app(tmpdir_factory):
+#     # create directory structure of project/meld/components
+#     app_dir = tmpdir_factory.mktemp("project")
+#     meld = Meld()
+#     app = Flask(f"{app_dir}", root_path=app_dir)
+#     create_test_component(app_dir)
+#     app.secret_key = __name__
+#     meld.init_app(app)
+#     return app
 
 
 @pytest.fixture(scope="session")
@@ -51,7 +65,7 @@ def app_factory(tmpdir_factory):
 @pytest.fixture(scope="function")
 def browser_client(pytestconfig):
     current_test = os.getenv('PYTEST_CURRENT_TEST')
-    base = pytestconfig.rootdir / "tests"
+    base = pytestconfig.rootdir
     meld_base = Path(f"{base}/meld_test_project/meld")
     index = Path(f"{base}/meld_test_project/templates/index.html")
 
@@ -60,7 +74,7 @@ def browser_client(pytestconfig):
 
     component_name_path = Path(current_test.split("::")[0].split(".")[0])
 
-    component_base_path = Path(base, "/".join(component_name_path.parts[1:-1]))
+    component_base_path = Path(base, "/".join(component_name_path.parts[:-1]))
     component_name = component_name_path.parts[-1].replace("test_", "")
 
     template = Path(f"{component_base_path}/{component_name}.html")
