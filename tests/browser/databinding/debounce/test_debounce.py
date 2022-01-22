@@ -1,5 +1,10 @@
+import pytest
+from flask import url_for
+
+
+@pytest.mark.usefixtures('live_server')
 def test_input_debounce(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     # Click input
     page.click("input")
     # Fill input
@@ -11,8 +16,9 @@ def test_input_debounce(browser_client, page):
     assert page.inner_text('#bound-data') == 'flask-debounce test'
 
 
-def test_checkbox(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+@pytest.mark.usefixtures('live_server')
+def test_checkbox_debounce(browser_client, page):
+    page.goto(url_for('index', _external=True))
     foo_id = "#foo-id"
     foo = page.locator("#foo-id")
 
@@ -30,10 +36,11 @@ def test_checkbox(browser_client, page):
     page.check("#bar-a")
     page.wait_for_timeout(200)
     assert page.inner_text("#bound-bar") == "[]"
-    page.check("#bar-b")
-    page.wait_for_timeout(100)
-    assert page.inner_text("#bound-bar") == "['q']"
     page.wait_for_timeout(200)
+    assert page.inner_text("#bound-bar") == "['q']"
+    page.check("#bar-b")
+    assert page.inner_text("#bound-bar") == "['q']"
+    page.wait_for_timeout(300)
     assert page.inner_text("#bound-bar") == "['q', 'v']"
 
     # test checkbox with int value

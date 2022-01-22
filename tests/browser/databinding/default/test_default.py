@@ -1,5 +1,5 @@
 import pytest
-from flask import url_for, render_template, render_template_string
+from flask import url_for
 
 
 @pytest.mark.usefixtures('live_server')

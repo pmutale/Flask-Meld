@@ -31,16 +31,16 @@ def app():
     return app
 
 
-# @pytest.fixture(scope="module")
-# def app(tmpdir_factory):
-#     # create directory structure of project/meld/components
-#     app_dir = tmpdir_factory.mktemp("project")
-#     meld = Meld()
-#     app = Flask(f"{app_dir}", root_path=app_dir)
-#     create_test_component(app_dir)
-#     app.secret_key = __name__
-#     meld.init_app(app)
-#     return app
+@pytest.fixture(scope="module")
+def app_mod(tmpdir_factory):
+    # create directory structure of project/meld/components
+    app_dir = tmpdir_factory.mktemp("project")
+    meld = Meld()
+    app = Flask(f"{app_dir}", root_path=app_dir)
+    create_test_component(app_dir)
+    app.secret_key = __name__
+    meld.init_app(app)
+    return app
 
 
 @pytest.fixture(scope="session")
@@ -97,8 +97,8 @@ def app_factory_ctx(app_factory):
 
 
 @pytest.fixture
-def app_ctx(app):
-    with app.app_context() as ctx:
+def app_ctx(app_mod):
+    with app_mod.app_context() as ctx:
         yield ctx
 
 
