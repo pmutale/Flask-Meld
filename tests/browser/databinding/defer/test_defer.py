@@ -1,6 +1,10 @@
+import pytest
+from flask import url_for
+
+
+@pytest.mark.usefixtures('live_server')
 def test_input_defer(browser_client, page):
-    page.wait_for_timeout(500)
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     # Click input
     page.click("input")
     # Fill input
@@ -11,8 +15,9 @@ def test_input_defer(browser_client, page):
     assert page.inner_text('#bound-data-defer') == 'flask-defer test'
 
 
+@pytest.mark.usefixtures('live_server')
 def test_checkbox_defer(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     foo_id = "#foo-id"
     foo = page.locator("#foo-id")
 
@@ -41,9 +46,9 @@ def test_checkbox_defer(browser_client, page):
     # test checkbox with int value
     page.check("#baz-id")
     page.click("#button")
-    page.wait_for_timeout(100)
+    page.wait_for_timeout(50)
     assert page.inner_text("#bound-baz") == ""
-    page.wait_for_timeout(100)
+    page.wait_for_timeout(300)
     assert page.inner_text("#bound-baz") == "2"
 
     # test multiple checkboxes in same request

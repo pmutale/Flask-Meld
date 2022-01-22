@@ -1,5 +1,10 @@
+import pytest
+from flask import url_for
+
+
+@pytest.mark.usefixtures('live_server')
 def test_input_text(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     # wait for component.loaded
     # Click input
     page.click("input")

@@ -1,5 +1,10 @@
-def test_input_text(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+import pytest
+from flask import url_for
+
+
+@pytest.mark.usefixtures('live_server')
+def test_input_text(page, browser_client):
+    page.goto(url_for('index', _external=True))
     # Click input
     page.click("#input")
     # Fill input
@@ -12,8 +17,9 @@ def test_input_text(browser_client, page):
     assert page.input_value("#input") == fill_text
 
 
+@pytest.mark.usefixtures('live_server')
 def test_text_area(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     # Click text area
     page.click("#text-area")
     # Fill input
@@ -26,10 +32,11 @@ def test_text_area(browser_client, page):
     assert page.input_value("#text-area") == fill_text
 
 
+@pytest.mark.usefixtures('live_server')
 def test_checkbox(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     foo_id = "#foo-id"
-    foo = page.locator("#foo-id")
+    foo = page.locator(foo_id)
 
     assert page.inner_text("#bound-foo") == 'True'
     assert foo.is_checked()
@@ -53,8 +60,9 @@ def test_checkbox(browser_client, page):
     assert page.inner_text("#bound-baz") == "2"
 
 
+@pytest.mark.usefixtures('live_server')
 def test_radio_field(browser_client, page):
-    page.goto("http://127.0.0.1:5009/")
+    page.goto(url_for('index', _external=True))
     page.click("#html")
     page.wait_for_timeout(200)
 
