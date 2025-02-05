@@ -37,7 +37,7 @@ setup(
         "flask-socketio>=5",
         "gevent-websocket>=0.10.1",
         "jinja2-simple-tags==0.3.1",
-        "click==8.0.0"
+        "click==8.1.2"
     ],
     tests_require=["pytest"],
     test_suite="tests",
